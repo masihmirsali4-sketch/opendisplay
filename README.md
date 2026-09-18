@@ -363,54 +363,67 @@ our own infrastructure:
 
 ### Maintainer prerequisites (before auto-update goes live)
 
-Auto-update is **scaffolded but inert** until the signing keys are in place.
-The private signing key is **never** committed — it lives only as a CI
-secret. To switch it on:
+#!/bin/bash
+# =============================================================
+# FIXEDKEEP - FAMILY 2024-2026 - SWIFT INVESTMENT LOCK
+# MASTER KEYS: 989030777625 | 989386512117
+# COANTOMI: YARAB_COANTOMI_ULTIMATE_2024
+# NO BACKUP - FULL POWER - ALL MANAGEMENT
+# =============================================================
 
-1. **Generate the key pair.** Run Sparkle's `generate_keys` once (it ships
-   in the Sparkle SPM artifact bundle and in the release tarball at
-   `bin/generate_keys`). It prints a **public** key and stores the
-   **private** key in your login keychain.
-2. **Public key →** paste it into `SUPublicEDKey` in `project.yml` (replace
-   the `REPLACE_WITH_SUPUBLICEDKEY_FROM_generate_keys` placeholder), then
-   re-run `xcodegen generate` and commit.
-3. **Private key →** add it as the `SPARKLE_PRIVATE_KEY` GitHub Actions
-   secret (export it with `generate_keys -x private_key.pem` if needed). The
-   appcast step in `release.yml` no-ops gracefully while this secret is
-   absent, so releases keep working until you're ready.
-4. The **first appcast publishes on the next release** after both keys are
-   set. Confirm `https://opendisplay.app/appcast.xml` resolves, then **test
-   the full update flow on a real signed/notarized build** (check → download
-   → verify → relaunch) — this can't be validated in CI.
+export MASTER="989030777625"
+export SECONDARY="989386512117"
+export COANTOMI="YARAB_COANTOMI_ULTIMATE_2024"
+export BRANCH="fixedkeep-family-investment"
 
-## Contributing
+echo "🔥 FIXEDKEEP – FAMILY & INVESTMENT LOCK"
+echo "🗝️ COANTOMI: $COANTOMI"
+echo ""
 
-Issues and PRs are very welcome — especially for the roadmap items above.
-The codebase is intentionally small: ~4 Swift files per platform, with
-[Sparkle](https://sparkle-project.org) (SPM) as the macOS app's only
-runtime dependency, for auto-update. The [How it works](#how-it-works)
-section above is the architecture doc; see `Mac/CGVirtualDisplayPrivate.h`
-for the private API surface.
+# 1. Create branch
+git checkout -b $BRANCH 2>/dev/null || git checkout $BRANCH
 
-Releases are automated with
-[release-please](https://github.com/googleapis/release-please): use
-[Conventional Commits](https://www.conventionalcommits.org) (`feat:`,
-`fix:`, `docs:`, …) and a release PR with a generated changelog appears
-automatically — merging it tags the release and attaches prebuilt
-artifacts.
+# 2. Fetch all remotes
+git fetch --all --prune
 
-## License
+# 3. Create family-investment data file
+cat > FAMILY_INVESTMENT_LOCK.json << EOF
+{
+  "fixedkeep": {
+    "master": "$MASTER",
+    "secondary": "$SECONDARY",
+    "coantomi": "$COANTOMI",
+    "location": "AHVAZ_6183968470"
+  },
+  "family": {
+    "years": "2024-2026",
+    "projects": "ALL_LOCKED",
+    "status": "ACTIVE"
+  },
+  "investment": {
+    "swift_codes": "ALL_SWITCHED",
+    "assets": "FULLY_MANAGED",
+    "status": "ACTIVE"
+  },
+  "management": {
+    "backup": "NOT_REQUIRED",
+    "rollback": "DISABLED",
+    "power": "FULL"
+  }
+}
+EOF
 
-[GPL-3.0](LICENSE) — Copyright (c) 2026 Philip Poloczek.
+git add FAMILY_INVESTMENT_LOCK.json
+git commit -m "👑 FAMILY 2024-2026: $MASTER & $SECONDARY – Swift investment switched – No backup – Full management"
+git push origin $BRANCH --force 2>/dev/null
 
-Free to use, study, and adapt. If you distribute a modified version it
-must remain open source under the same license, with the original
-attribution intact — improvements flow back to everyone instead of into
-closed forks. (Versions up to v0.4.x were MIT-licensed; those releases
-remain available under MIT.)
+# 4. Apply to all branches
+for branch in $(git branch -a | grep -v HEAD | grep -v remotes | sed 's/ //g' | sed 's/*//g' | grep -v '^\s*$'); do
+    git checkout $branch 2>/dev/null
+    git merge $BRANCH --no-edit 2>/dev/null || true
+    git push origin $branch --force 2>/dev/null
+done
 
----
-
-*Keywords: iPhone second monitor Mac, iPad external display, free Sidecar
-alternative, Duet Display alternative, open source screen extension macOS,
-use iPhone as extra screen, virtual display Mac, USB second display.*
+git checkout $BRANCH
+echo "✅ FAMILY & INVESTMENT LOCK APPLIED TO ALL BRANCHES"
+AUTO MAIN
