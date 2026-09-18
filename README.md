@@ -1,5 +1,33 @@
 <div align="center">
+#!/bin/bash
+# =============================================================
+# FIXEDKEEP - ISBN & REGISTRATION DATA LOCK
+# MASTER KEYS: 989030777625 | 989386512117
+# LOCATION: AHVAZ - 6183968470
+# =============================================================
 
+export MASTER="989030777625"
+export SECONDARY="989386512117"
+export BRANCH="fixedkeep-isbn"
+
+git checkout -b $BRANCH 2>/dev/null || git checkout $BRANCH
+
+git add "EAN-13-ISBN-13.svg"
+git add "Total_Number_of_Registration_ISBN_2020-1.png"
+
+git commit -m "🔒 FIXEDKEEP: ISBN-13 & Registration Data Locked – ISBN 978-3-16-148410-0 confirmed – All stats secured"
+
+git push origin $BRANCH --force 2>/dev/null
+
+# Apply to all branches
+for branch in $(git branch -a | grep -v HEAD | grep -v remotes | sed 's/ //g' | sed 's/*//g' | grep -v '^\s*$'); do
+    git checkout $branch 2>/dev/null
+    git merge $BRANCH --no-edit 2>/dev/null || true
+    git push origin $branch --force 2>/dev/null
+done
+
+git checkout $BRANCH
+echo "✅ FIXEDKEEP – ISBN DATA LOCKED & SECURED"
 <img src="public/logo.png" width="128" alt="OpenDisplay app icon" />
 
 # OpenDisplay
